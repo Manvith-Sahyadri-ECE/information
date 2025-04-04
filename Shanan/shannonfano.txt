@@ -1,0 +1,52 @@
+symbols = {'A', 'B', 'C', 'D', 'E', 'F'};
+probabilities = [0.4, 0.2, 0.20, 0.1, 0.07, 0.03];
+function H=entropy(probabilities);
+  H=-sum(probabilities.*log2(probabilities));
+end
+function L=avg_code_length(probabilities,code_lengths)
+  L=sum(probabilities.*code_lengths);
+end
+function codes=shannon_fano(symbols, probabilities)
+  [probabilities, index]=sort(probabilities,'descend');
+  symbols=symbols(index);
+  codes=cell(size(symbols));
+  codes=assign_codes(symbols, probabilities,1, length(symbols), codes, ' ');
+end
+function codes=assign_codes(symbols, probabilities, start_idx, end_idx, codes, prefix)
+if start_idx==end_idx
+  codes{start_idx}=prefix;
+  return;
+end
+total=sum(probabilities(start_idx:end_idx));
+running_sum=0;
+split_idx=start_idx;
+while running_sum<total/2
+  running_sum+=probabilities(split_idx);
+  split_idx++;
+end
+for i=start_idx:split_idx-1
+  codes{i}=strcat(prefix, '0');
+end
+for i=split_idx:end_idx
+  codes{i}=strcat(prefix,'1');
+end
+codes=assign_codes(symbols, probabilities, start_idx, split_idx-1, codes, codes{start_idx});
+codes=assign_codes(symbols, probabilities,split_idx, end_idx, codes, codes{split_idx});
+end
+codes=shannon_fano(symbols, probabilities);
+code_lengths=cellfun(@length, codes);
+
+H=entropy(probabilities);
+L=avg_code_length(probabilities, code_lengths);
+efficiency=(H/L)*100;
+redundancy=100-efficiency;
+
+disp('Shannon-Fano Codes:');
+for i=1:length(symbols)
+  fprintf('%s:%s\n',symbols{i}, codes{i});
+end
+printf('Entropy=%f\n\n',H);
+printf('Average code length=%f\n\n',L);
+printf('Efficiency=%f\n\n',efficiency);
+printf('Redundancy=%f\n\n',redundancy);
+
