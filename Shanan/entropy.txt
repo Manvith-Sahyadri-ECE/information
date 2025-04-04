@@ -1,0 +1,52 @@
+clc;
+paa=0.5;
+pab=0.25;
+pac=0.25;
+pba=0.5;
+pbb=0.5;
+pbc=0;
+pca=0.5;
+pcb=0;
+pcc=0.5;
+pa=[paa pab pac];
+pa1=-log(pa)/log(2);
+pb=[pba pbb];
+pb1=-log2(pb);
+pc=[pca pcc];
+pc1=-log2(pc);
+p=[1 1 1;-0.5 0.5 0.5;0.25 -0.5 0];
+b=[1;0;0];
+a=p\b;
+PA=a(1);
+PB=a(2);
+PC=a(3);
+ha=pa.*pa1;
+hb=pb.*pb1;
+hc=pc.*pc1;
+HA=sum(ha);
+HC=sum(hc);
+HB=sum(hb);
+h=[HA HB HC];
+A=a;
+H=sum(h.*A)
+fprintf('for source A\n\n');
+fprintf('PA=%f\n\n',PA);
+fprintf('paa=%f\n\n',paa);
+fprintf('pab=%f\n\n',pab);
+fprintf('pac=%f\n\n',pac);
+fprintf('the energy of the source A is %f bits/message symbol\n\n',HA);
+
+fprintf('for source B\n\n');
+fprintf('PB=%f\n\n',PB);
+fprintf('pba=%f\n\n',pba);
+fprintf('pbb=%f\n\n',pbb);
+fprintf('pbc=%f\n\n',pbc);
+fprintf('the energy of the source B is %f bits/message symbol\n\n',HB);
+
+fprintf('for source C\n\n');
+fprintf('PC=%f\n\n',PC);
+fprintf('pca=%f\n\n',pca);
+fprintf('pcb=%f\n\n',pcb);
+fprintf('pcc=%f\n\n',pcc);
+fprintf('the energy of the source C is %f bits/message symbol\n\n',HC);
+
